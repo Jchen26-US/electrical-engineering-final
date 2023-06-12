@@ -3,7 +3,6 @@ from tkinter import *
 import pyautogui
 import time 
 import serial
-from PIL import ImageTk, Image  
 
 
 class RITO_ALARM:
@@ -20,7 +19,7 @@ class RITO_ALARM:
     def start_serial(self,Port, Baudrate, Timeout): #starts serial connection
         self.ard = serial.Serial(port = Port, baudrate = Baudrate, timeout = Timeout)
     
-    def Comm(self,time_threshold): #time_threshold should be in seconds
+    def Comm(self, time_threshold): #time_threshold should be in seconds
         if (self.count > time_threshold):
             self.ard.write("s".encode())
         elif (self.count < time_threshold):
@@ -30,8 +29,7 @@ class RITO_ALARM:
     def Setup_appdisplay(self):
         self.root = tk.Tk()
         self.root.title("Number Updater")  # Set the window title
-        #self.root.geometry(str(self.root.winfo_screenwidth())+ "x" + str(int(self.root.winfo_screenheight())-100))  # Set the window size
-        self.root.geometry("1000x500")
+        self.root.geometry(str(self.root.winfo_screenwidth())+ "x" + str(int(self.root.winfo_screenheight())-100))  # Set the window size
         self.label = tk.Label(self.root, text = "enter target window", font = ("Arial",20))
         self.label.grid(row= 0 ,column=0)
         self.root.configure(bg = "beige")
@@ -47,7 +45,6 @@ class RITO_ALARM:
         self.list_display = tk.Label(self.root, text = self.target_list, font = ("Arial", 20))
 
         self.timerequest = tk.Entry(self.root, textvariable = self.timethreshold)
-        self.timethreshold = tk.IntVar
         self.timerequest_label = tk.Label(self.root, text = "Enter time limit here(seconds): ")
         self.target_input.grid(row = 0, column = 1)
         self.btn_add_to_list.grid(row = 0, column = 2)
@@ -82,6 +79,10 @@ class RITO_ALARM:
         self.btn_start.destroy()
         self.btn_add_to_list.destroy()
         self.target_input.destroy()
+        self.timerequest.destroy()
+        self.timerequest_label.destroy()
+
+
 
         self.plain_text = Label(self.root, text = "TARGET WINDOWS", bg = "red", font = ("Arial",20), fg = "purple")
         self.plain_text.grid(row = 1, column = 0)
@@ -113,8 +114,8 @@ class RITO_ALARM:
         self.Window_check()
         self.count_disp.configure(text = "Windows have been detected " + str(self.count) + " times")
         self.cycle_disp.configure(text = "Program has been running for " + str(self.cycle_count) + " seconds")
-        self.Comm(self.timethreshold)
-        self.root.after(1000, self.update)  # Schedule the next update after 1 second
+        self.Comm(self.timethreshold.get())
+        self.root.after(self.update)  # Schedule the next update after 1 second
     
     #start command
     def start(self):
